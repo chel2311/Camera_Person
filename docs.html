@@ -312,6 +312,162 @@
                 flex-direction: column;
             }
         }
+
+        /* ドキュメント内容セクションのスタイル */
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .content-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--medium-blue) 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-header h2 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content-body {
+            padding: 30px;
+            line-height: 1.8;
+        }
+
+        .content-body section {
+            margin-bottom: 30px;
+        }
+
+        .content-body h3 {
+            color: var(--primary-color);
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 10px;
+        }
+
+        .content-body h4 {
+            color: var(--medium-blue);
+            font-size: 16px;
+            margin: 15px 0 10px 0;
+        }
+
+        .shortcut-table, .requirements-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .shortcut-table th, .shortcut-table td,
+        .requirements-table th, .requirements-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .shortcut-table th, .requirements-table th {
+            background: var(--light-blue);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .shortcut-table tr:hover, .requirements-table tr:hover {
+            background: var(--light-blue);
+        }
+
+        kbd {
+            background: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tech-category {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .architecture-diagram {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .system-diagram {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid var(--light-blue);
+            border-radius: 10px;
+            background: white;
+            padding: 20px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-header {
+                padding: 15px 20px;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .tech-stack {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -547,8 +703,198 @@
     </div>
 
     <!-- 隠されたコンテンツセクション -->
-    <div id="manual-content" style="display: none;">
-        <!-- 操作説明書の内容がここに動的に読み込まれます -->
+    <!-- 実際のドキュメント内容セクション -->
+    <div id="manual-content" class="content-section" style="display: none;">
+        <div class="content-header">
+            <h2><i class="fas fa-book"></i> 操作説明書</h2>
+            <button onclick="hideContent()" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="content-body">
+            <section>
+                <h3><i class="fas fa-play"></i> クイックスタート</h3>
+                <ol>
+                    <li><strong>カメラ開始:</strong> 「カメラ開始」ボタンをクリック</li>
+                    <li><strong>アクセス許可:</strong> ブラウザのカメラアクセス許可を承認</li>
+                    <li><strong>検出開始:</strong> 「検出開始」ボタンで人物検出を開始</li>
+                    <li><strong>自動キャプチャ:</strong> 人物が検出されると自動的に画像保存</li>
+                </ol>
+            </section>
+            <section>
+                <h3><i class="fas fa-keyboard"></i> キーボードショートカット</h3>
+                <table class="shortcut-table">
+                    <tr><td><kbd>docs</kbd></td><td>ドキュメント表示</td></tr>
+                    <tr><td><kbd>C</kbd></td><td>カメラ開始/停止</td></tr>
+                    <tr><td><kbd>Space</kbd></td><td>検出開始/停止</td></tr>
+                    <tr><td><kbd>S</kbd></td><td>手動キャプチャ</td></tr>
+                    <tr><td><kbd>?</kbd></td><td>ヘルプ表示</td></tr>
+                </table>
+            </section>
+            <section>
+                <h3><i class="fas fa-cog"></i> 設定項目</h3>
+                <ul>
+                    <li><strong>自動キャプチャ:</strong> ON/OFF切り替え</li>
+                    <li><strong>キャプチャ間隔:</strong> 1〜10秒で設定</li>
+                    <li><strong>検出信頼度:</strong> 0.3〜0.9で調整
+                        <ul>
+                            <li>0.3〜0.5: 高感度（推奨）</li>
+                            <li>0.5〜0.6: バランス型</li>
+                            <li>0.7〜0.9: 高精度</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3><i class="fas fa-images"></i> 画像管理</h3>
+                <ul>
+                    <li><strong>個別削除:</strong> 各画像のゴミ箱アイコンをクリック</li>
+                    <li><strong>選択機能:</strong> 画像をクリックして選択/選択解除</li>
+                    <li><strong>一括保存:</strong> すべての画像を連続ダウンロード</li>
+                    <li><strong>選択削除:</strong> 選択した画像のみ削除</li>
+                    <li><strong>全削除:</strong> すべての画像を一括削除</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <div id="architecture-content" class="content-section" style="display: none;">
+        <div class="content-header">
+            <h2><i class="fas fa-sitemap"></i> システム構成図</h2>
+            <button onclick="hideContent()" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="content-body">
+            <section>
+                <h3><i class="fas fa-layer-group"></i> アーキテクチャ概要</h3>
+                <div class="architecture-diagram">
+                    <svg viewBox="0 0 800 400" class="system-diagram">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#005BAB;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#4D8BC9;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- ブラウザ層 -->
+                        <rect x="50" y="50" width="200" height="100" rx="10" fill="url(#grad1)" stroke="#005BAB" stroke-width="2"/>
+                        <text x="150" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">ブラウザ (UI層)</text>
+                        <text x="150" y="105" text-anchor="middle" fill="white" font-size="10">HTML5/CSS3/JavaScript</text>
+                        <text x="150" y="120" text-anchor="middle" fill="white" font-size="10">Font Awesome</text>
+
+                        <!-- MediaPipe層 -->
+                        <rect x="300" y="50" width="200" height="100" rx="10" fill="url(#grad1)" stroke="#005BAB" stroke-width="2"/>
+                        <text x="400" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">MediaPipe (AI検出層)</text>
+                        <text x="400" y="105" text-anchor="middle" fill="white" font-size="10">人物検出・骨格追跡</text>
+                        <text x="400" y="120" text-anchor="middle" fill="white" font-size="10">信頼度計算</text>
+
+                        <!-- ストレージ層 -->
+                        <rect x="550" y="50" width="200" height="100" rx="10" fill="url(#grad1)" stroke="#005BAB" stroke-width="2"/>
+                        <text x="650" y="85" text-anchor="middle" fill="white" font-size="14" font-weight="bold">ローカル (ストレージ)</text>
+                        <text x="650" y="105" text-anchor="middle" fill="white" font-size="10">画像保存・Blob管理</text>
+
+                        <!-- 矢印 -->
+                        <path d="M250 100 L300 100" stroke="#FF961C" stroke-width="3" marker-end="url(#arrowhead)"/>
+                        <path d="M500 100 L550 100" stroke="#FF961C" stroke-width="3" marker-end="url(#arrowhead)"/>
+
+                        <!-- データフロー -->
+                        <text x="150" y="200" text-anchor="middle" fill="#333" font-size="12" font-weight="bold">データフロー</text>
+                        <text x="150" y="220" text-anchor="middle" fill="#666" font-size="10">1. カメラ映像取得</text>
+                        <text x="150" y="235" text-anchor="middle" fill="#666" font-size="10">2. ユーザー操作処理</text>
+
+                        <text x="400" y="220" text-anchor="middle" fill="#666" font-size="10">3. 人物検出実行</text>
+                        <text x="400" y="235" text-anchor="middle" fill="#666" font-size="10">4. 骨格データ生成</text>
+
+                        <text x="650" y="220" text-anchor="middle" fill="#666" font-size="10">5. 画像キャプチャ</text>
+                        <text x="650" y="235" text-anchor="middle" fill="#666" font-size="10">6. ローカル保存</text>
+
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#FF961C" />
+                            </marker>
+                        </defs>
+                    </svg>
+                </div>
+            </section>
+            <section>
+                <h3><i class="fas fa-stack"></i> 技術スタック</h3>
+                <div class="tech-stack">
+                    <div class="tech-category">
+                        <h4>フロントエンド</h4>
+                        <ul>
+                            <li>HTML5 - セマンティックマークアップ</li>
+                            <li>CSS3 - レスポンシブデザイン、アニメーション</li>
+                            <li>JavaScript (ES6+) - モダンJavaScript機能</li>
+                            <li>Font Awesome - プロフェッショナルアイコン</li>
+                        </ul>
+                    </div>
+                    <div class="tech-category">
+                        <h4>AI/ML</h4>
+                        <ul>
+                            <li>MediaPipe Pose - Google高精度人物検出</li>
+                            <li>TensorFlow.js - ブラウザ内機械学習</li>
+                        </ul>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Web API</h4>
+                        <ul>
+                            <li>MediaDevices API - カメラアクセス</li>
+                            <li>Canvas API - 画像処理とキャプチャ</li>
+                            <li>File System API - ローカルファイル保存</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="requirements-content" class="content-section" style="display: none;">
+        <div class="content-header">
+            <h2><i class="fas fa-clipboard-list"></i> 要件定義書</h2>
+            <button onclick="hideContent()" class="close-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="content-body">
+            <section>
+                <h3><i class="fas fa-target"></i> プロジェクト概要</h3>
+                <p>リアルタイムで人物を検出し、自動的に画像をキャプチャするWebアプリケーション。MediaPipe Poseを使用した高精度な人物検出機能を搭載。</p>
+            </section>
+            <section>
+                <h3><i class="fas fa-list-check"></i> 機能要件</h3>
+                <table class="requirements-table">
+                    <thead>
+                        <tr><th>ID</th><th>機能名</th><th>説明</th><th>優先度</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>FR-001</td><td>カメラアクセス</td><td>Webカメラのリアルタイム映像取得</td><td>必須</td></tr>
+                        <tr><td>FR-002</td><td>人物検出</td><td>MediaPipe Poseによる人物検出</td><td>必須</td></tr>
+                        <tr><td>FR-003</td><td>自動キャプチャ</td><td>検出時の自動画像保存</td><td>必須</td></tr>
+                        <tr><td>FR-004</td><td>画像管理</td><td>個別・一括削除、保存機能</td><td>必須</td></tr>
+                        <tr><td>FR-005</td><td>設定管理</td><td>検出閾値、間隔の調整</td><td>重要</td></tr>
+                        <tr><td>FR-006</td><td>キーボード操作</td><td>ショートカットキー対応</td><td>重要</td></tr>
+                        <tr><td>FR-007</td><td>レスポンシブUI</td><td>モバイル・デスクトップ対応</td><td>重要</td></tr>
+                        <tr><td>FR-008</td><td>ドキュメント</td><td>操作説明・技術資料</td><td>重要</td></tr>
+                        <tr><td>FR-009</td><td>エラーハンドリング</td><td>適切なエラー処理と表示</td><td>重要</td></tr>
+                        <tr><td>FR-010</td><td>パフォーマンス</td><td>30fps動作、低遅延</td><td>重要</td></tr>
+                    </tbody>
+                </table>
+            </section>
+            <section>
+                <h3><i class="fas fa-gauge-high"></i> 非機能要件</h3>
+                <ul>
+                    <li><strong>パフォーマンス:</strong> 30fps、検出遅延100ms以下</li>
+                    <li><strong>精度:</strong> 人物検出精度90%以上</li>
+                    <li><strong>ブラウザ対応:</strong> Chrome90+, Edge90+, Firefox88+, Safari14+</li>
+                    <li><strong>システム要件:</strong> CPU: デュアルコア2.0GHz以上、RAM: 4GB以上</li>
+                    <li><strong>セキュリティ:</strong> HTTPS必須、カメラ権限適切処理</li>
+                </ul>
+            </section>
+            <section>
+                <h3><i class="fas fa-exclamation-triangle"></i> 制約事項</h3>
+                <ul>
+                    <li>HTTPS環境でのみカメラアクセス可能</li>
+                    <li>同時検出人数は3〜5人が上限</li>
+                    <li>ブラウザメモリ制限により最大20枚の画像保持</li>
+                    <li>File System APIは一部ブラウザで未対応</li>
+                </ul>
+            </section>
+        </div>
     </div>
 
     <script>
@@ -586,18 +932,32 @@
 
         // ドキュメント表示関数
         function showManual() {
-            window.open('index.html', '_blank');
-            // または新しいタブで詳細なマニュアルページを開く
+            hideAllContent();
+            document.getElementById('manual-content').style.display = 'block';
+            document.getElementById('manual-content').scrollIntoView({ behavior: 'smooth' });
         }
 
         function showArchitecture() {
-            window.open('index.html', '_blank');
-            // システム構成図の詳細ページを開く
+            hideAllContent();
+            document.getElementById('architecture-content').style.display = 'block';
+            document.getElementById('architecture-content').scrollIntoView({ behavior: 'smooth' });
         }
 
         function showRequirements() {
-            window.open('index.html', '_blank');
-            // 要件定義書の詳細ページを開く
+            hideAllContent();
+            document.getElementById('requirements-content').style.display = 'block';
+            document.getElementById('requirements-content').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function hideAllContent() {
+            document.getElementById('manual-content').style.display = 'none';
+            document.getElementById('architecture-content').style.display = 'none';
+            document.getElementById('requirements-content').style.display = 'none';
+        }
+
+        function hideContent() {
+            hideAllContent();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // カードのクリックでハイライト
