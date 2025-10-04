@@ -623,28 +623,91 @@
     <button class="close-btn" onclick="window.close()">閉じる (ESC)</button>
 
     <script>
-        function showTab(tabName) {
-            // すべてのタブコンテンツを非表示
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
+        // タブ切り替え機能（完全版）
+        class TabManager {
+            constructor(containerSelector) {
+                this.container = document.querySelector(containerSelector) || document;
+                this.tabs = this.container.querySelectorAll('.tab-nav-link');
+                this.contents = this.container.querySelectorAll('.tab-content');
+                this.init();
+            }
 
-            // すべてのタブボタンの非アクティブ化
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
+            init() {
+                // タブクリックイベント
+                this.tabs.forEach((tab, index) => {
+                    tab.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        this.switchTab(index);
+                        this.updateURL(tab.dataset.tab);
+                    });
+                });
 
-            // 選択されたタブを表示
-            document.getElementById(tabName).classList.add('active');
+                // キーボードナビゲーション
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey) {
+                        const num = parseInt(e.key);
+                        if (num >= 1 && num <= this.tabs.length) {
+                            e.preventDefault();
+                            this.switchTab(num - 1);
+                        }
+                    }
+                });
 
-            // 対応するタブボタンをアクティブ化
-            const activeTab = Array.from(tabs).find(tab =>
-                tab.textContent.includes(
-                    tabName === 'manual' ? '操作説明書' :
-                    tabName === 'architecture' ? 'システム構成図' :
-                    '要件定義書'
-                )
-            );
-            if (activeTab) activeTab.classList.add('active');
+                // URLフラグメントからの初期化
+                this.initFromURL();
+            }
+
+            switchTab(index) {
+                // 全てのタブを非アクティブ化
+                this.tabs.forEach(tab => tab.classList.remove('active'));
+                this.contents.forEach(content => content.classList.remove('active'));
+
+                // 選択されたタブをアクティブ化
+                if (this.tabs[index] && this.contents[index]) {
+                    this.tabs[index].classList.add('active');
+                    this.contents[index].classList.add('active');
+                    this.tabs[index].focus();
+                }
+            }
+
+            updateURL(tabId) {
+                if (tabId) {
+                    window.history.replaceState(null, null, `#${tabId}`);
+                }
+            }
+
+            initFromURL() {
+                const hash = window.location.hash.slice(1);
+                if (hash) {
+                    const targetTab = Array.from(this.tabs).find(tab =>
+                        tab.dataset.tab === hash
+                    );
+                    if (targetTab) {
+                        const index = Array.from(this.tabs).indexOf(targetTab);
+                        this.switchTab(index);
+                        return;
+                    }
+                }
+                // デフォルトは最初のタブ
+                this.switchTab(0);
+            }
         }
+
+        // レガシー関数（後方互換性のため）
+        function showTab(tabName) {
+            const tab = document.querySelector(`[data-tab="${tabName}"]`);
+            if (tab) {
+                const index = Array.from(document.querySelectorAll('.tab-nav-link')).indexOf(tab);
+                if (window.tabManager) {
+                    window.tabManager.switchTab(index);
+                }
+            }
+        }
+
+        // ページ読み込み完了時に初期化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.tabManager = new TabManager('.docs-container');
+        });
 
         // ESCキーで閉じる
         document.addEventListener('keydown', (e) => {
