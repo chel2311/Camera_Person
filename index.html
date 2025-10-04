@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人物検出カメラアプリ</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-camera"></i> 人物検出カメラアプリ</h1>
+            <div class="status-bar">
+                <span id="detection-status" class="status-indicator">
+                    <i class="fas fa-circle"></i> 待機中
+                </span>
+                <span id="capture-count" class="capture-counter">
+                    <i class="fas fa-image"></i> キャプチャ: 0
+                </span>
+            </div>
+        </header>
+
+        <main>
+            <div class="camera-section">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                <canvas id="detection-overlay"></canvas>
+
+                <div class="controls">
+                    <button id="start-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> カメラ開始
+                    </button>
+                    <button id="stop-btn" class="btn btn-secondary" disabled>
+                        <i class="fas fa-stop"></i> 停止
+                    </button>
+                    <button id="toggle-detection" class="btn btn-info" disabled>
+                        <i class="fas fa-user-check"></i> 検出開始
+                    </button>
+                </div>
+            </div>
+
+            <div class="settings-panel">
+                <h3><i class="fas fa-cog"></i> 設定</h3>
+                <div class="setting-item">
+                    <label for="auto-capture">自動キャプチャ</label>
+                    <input type="checkbox" id="auto-capture" checked>
+                </div>
+                <div class="setting-item">
+                    <label for="capture-interval">キャプチャ間隔（秒）</label>
+                    <input type="number" id="capture-interval" min="1" max="10" value="3">
+                </div>
+                <div class="setting-item">
+                    <label for="confidence-threshold">検出信頼度</label>
+                    <input type="range" id="confidence-threshold" min="0.3" max="0.9" step="0.1" value="0.6">
+                    <span id="threshold-value">0.6</span>
+                </div>
+            </div>
+
+            <div class="captured-images">
+                <div class="gallery-header">
+                    <h3><i class="fas fa-images"></i> キャプチャ画像</h3>
+                    <div class="gallery-controls">
+                        <button id="select-all-btn" class="btn-small">
+                            <i class="fas fa-check-square"></i> 全選択
+                        </button>
+                        <button id="deselect-all-btn" class="btn-small" style="display:none;">
+                            <i class="fas fa-square"></i> 選択解除
+                        </button>
+                        <button id="download-all-btn" class="btn-small btn-success">
+                            <i class="fas fa-download"></i> 一括保存
+                        </button>
+                        <button id="delete-selected-btn" class="btn-small btn-danger" style="display:none;">
+                            <i class="fas fa-trash"></i> 選択削除
+                        </button>
+                        <button id="clear-all-btn" class="btn-small btn-warning">
+                            <i class="fas fa-trash-alt"></i> 全削除
+                        </button>
+                    </div>
+                </div>
+                <div id="image-gallery" class="gallery"></div>
+            </div>
+        </main>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <!-- MediaPipe Person Detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
