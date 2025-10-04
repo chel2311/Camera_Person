@@ -234,17 +234,24 @@ class PersonDetectionApp {
             landmarks[24]  // right hip
         ];
 
-        // 最小可視性チェック: 5つの主要ポイントのうち少なくとも4つが見える必要
+        // 可視性のチェックを緩和: 0.6 -> 0.5、必要数 4 -> 3
         const visibleKeypoints = keyPoints.filter(point =>
-            point && point.visibility && point.visibility > 0.6
+            point && point.visibility && point.visibility > 0.5
         );
 
-        if (visibleKeypoints.length < 4) {
+        console.log(`[DEBUG] 可視キーポイント数: ${visibleKeypoints.length}/5`);
+
+        if (visibleKeypoints.length < 3) {
+            console.log('[DEBUG] キーポイント不足でキャプチャ拒否');
             return 0; // 主要ポイントが不足している場合は無効
         }
 
         // 人体構造の妥当性をチェック
-        if (!this.validatePoseStructure(landmarks)) {
+        const structureValid = this.validatePoseStructure(landmarks);
+        console.log(`[DEBUG] 構造妥当性: ${structureValid}`);
+
+        if (!structureValid) {
+            console.log('[DEBUG] 構造妥当性チェック失敗でキャプチャ拒否');
             return 0; // 人体として不自然な形状の場合は無効
         }
 
@@ -253,6 +260,7 @@ class PersonDetectionApp {
             return sum + (point && point.visibility ? point.visibility : 0);
         }, 0) / keyPoints.length;
 
+        console.log(`[DEBUG] 最終信頼度: ${avgVisibility.toFixed(3)}`);
         return avgVisibility;
     }
 
@@ -269,34 +277,39 @@ class PersonDetectionApp {
                 return false;
             }
 
-            // 肩の幅をチェック（現実的な範囲内かどうか）
+            // 肩の幅をチェック（現実的な範囲内かどうか）- 条件を緩和
             const shoulderDistance = Math.abs(leftShoulder.x - rightShoulder.x);
-            if (shoulderDistance < 0.05 || shoulderDistance > 0.5) { // 画面幅の5%〜50%
+            if (shoulderDistance < 0.03 || shoulderDistance > 0.6) { // 画面幅の3%〜60%に緩和
+                console.log(`[DEBUG] 肩幅チェック失敗: ${shoulderDistance.toFixed(3)}`);
                 return false;
             }
 
-            // 腰の幅をチェック
+            // 腰の幅をチェック - 条件を緩和
             const hipDistance = Math.abs(leftHip.x - rightHip.x);
-            if (hipDistance < 0.03 || hipDistance > 0.4) { // 画面幅の3%〜40%
+            if (hipDistance < 0.02 || hipDistance > 0.5) { // 画面幅の2%〜50%に緩和
+                console.log(`[DEBUG] 腰幅チェック失敗: ${hipDistance.toFixed(3)}`);
                 return false;
             }
 
-            // 胴体の長さをチェック（肩から腰まで）
+            // 胴体の長さをチェック（肩から腰まで）- 条件を緩和
             const torsoLength = Math.abs((leftShoulder.y + rightShoulder.y) / 2 - (leftHip.y + rightHip.y) / 2);
-            if (torsoLength < 0.1 || torsoLength > 0.6) { // 画面高の10%〜60%
+            if (torsoLength < 0.05 || torsoLength > 0.7) { // 画面高の5%〜70%に緩和
+                console.log(`[DEBUG] 胴体長チェック失敗: ${torsoLength.toFixed(3)}`);
                 return false;
             }
 
-            // 頭の位置チェック（肩より上にあるか）
+            // 頭の位置チェック（肩より上にあるか）- 少し緩和
             const shoulderY = (leftShoulder.y + rightShoulder.y) / 2;
-            if (nose.y >= shoulderY) { // 頭が肩より下にある場合は無効
+            if (nose.y > shoulderY + 0.05) { // 5%のマージンを追加
+                console.log(`[DEBUG] 頭部位置チェック失敗: nose=${nose.y.toFixed(3)}, shoulder=${shoulderY.toFixed(3)}`);
                 return false;
             }
 
-            // 対称性チェック（左右の肩と腰の高さがある程度揃っているか）
+            // 対称性チェック（左右の肩と腰の高さがある程度揃っているか）- 条件を緩和
             const shoulderSymmetry = Math.abs(leftShoulder.y - rightShoulder.y);
             const hipSymmetry = Math.abs(leftHip.y - rightHip.y);
-            if (shoulderSymmetry > 0.1 || hipSymmetry > 0.1) { // 10%以上のずれは不自然
+            if (shoulderSymmetry > 0.15 || hipSymmetry > 0.15) { // 15%以上のずれは不自然に緩和
+                console.log(`[DEBUG] 対称性チェック失敗: 肩=${shoulderSymmetry.toFixed(3)}, 腰=${hipSymmetry.toFixed(3)}`);
                 return false;
             }
 
