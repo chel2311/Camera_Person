@@ -234,11 +234,77 @@ class PersonDetectionApp {
             landmarks[24]  // right hip
         ];
 
+        // 最小可視性チェック: 5つの主要ポイントのうち少なくとも4つが見える必要
+        const visibleKeypoints = keyPoints.filter(point =>
+            point && point.visibility && point.visibility > 0.6
+        );
+
+        if (visibleKeypoints.length < 4) {
+            return 0; // 主要ポイントが不足している場合は無効
+        }
+
+        // 人体構造の妥当性をチェック
+        if (!this.validatePoseStructure(landmarks)) {
+            return 0; // 人体として不自然な形状の場合は無効
+        }
+
+        // 可視性の平均を計算
         const avgVisibility = keyPoints.reduce((sum, point) => {
-            return sum + (point.visibility || 0);
+            return sum + (point && point.visibility ? point.visibility : 0);
         }, 0) / keyPoints.length;
 
         return avgVisibility;
+    }
+
+    validatePoseStructure(landmarks) {
+        try {
+            const nose = landmarks[0];
+            const leftShoulder = landmarks[11];
+            const rightShoulder = landmarks[12];
+            const leftHip = landmarks[23];
+            const rightHip = landmarks[24];
+
+            // 必要なポイントが存在しているかチェック
+            if (!nose || !leftShoulder || !rightShoulder || !leftHip || !rightHip) {
+                return false;
+            }
+
+            // 肩の幅をチェック（現実的な範囲内かどうか）
+            const shoulderDistance = Math.abs(leftShoulder.x - rightShoulder.x);
+            if (shoulderDistance < 0.05 || shoulderDistance > 0.5) { // 画面幅の5%〜50%
+                return false;
+            }
+
+            // 腰の幅をチェック
+            const hipDistance = Math.abs(leftHip.x - rightHip.x);
+            if (hipDistance < 0.03 || hipDistance > 0.4) { // 画面幅の3%〜40%
+                return false;
+            }
+
+            // 胴体の長さをチェック（肩から腰まで）
+            const torsoLength = Math.abs((leftShoulder.y + rightShoulder.y) / 2 - (leftHip.y + rightHip.y) / 2);
+            if (torsoLength < 0.1 || torsoLength > 0.6) { // 画面高の10%〜60%
+                return false;
+            }
+
+            // 頭の位置チェック（肩より上にあるか）
+            const shoulderY = (leftShoulder.y + rightShoulder.y) / 2;
+            if (nose.y >= shoulderY) { // 頭が肩より下にある場合は無効
+                return false;
+            }
+
+            // 対称性チェック（左右の肩と腰の高さがある程度揃っているか）
+            const shoulderSymmetry = Math.abs(leftShoulder.y - rightShoulder.y);
+            const hipSymmetry = Math.abs(leftHip.y - rightHip.y);
+            if (shoulderSymmetry > 0.1 || hipSymmetry > 0.1) { // 10%以上のずれは不自然
+                return false;
+            }
+
+            return true;
+        } catch (error) {
+            console.warn('ポーズ構造の検証中にエラーが発生しました:', error);
+            return false;
+        }
     }
 
     drawPoseOverlay(results) {

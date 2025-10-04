@@ -370,6 +370,63 @@
             margin: 20px 0;
         }
 
+        /* コピー可能テキストエリア */
+        .copy-area {
+            background: #f8f9fa;
+            border: 2px solid var(--light-blue);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .copy-area pre {
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .copy-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .copy-btn.copied {
+            background: var(--success-color);
+        }
+
+        .hierarchy-title {
+            color: var(--primary-color);
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .arch-card {
             background: var(--light-blue);
             padding: 20px;
@@ -923,6 +980,126 @@
                     <li><strong>DOM操作最適化:</strong> 仮想DOM概念の部分的適用</li>
                 </ul>
             </div>
+
+            <h3><i class="fas fa-file-alt"></i> システム構成階層構造（テキスト形式）</h3>
+            <div class="copy-area">
+                <button class="copy-btn" onclick="copyToClipboard('system-hierarchy')">
+                    <i class="fas fa-copy"></i> コピー
+                </button>
+                <pre id="system-hierarchy">人物検出カメラアプリケーション - システム構成階層
+=====================================
+
+1. プレゼンテーション層 (Presentation Layer)
+   ├── HTML5
+   │   ├── セマンティックマークアップ
+   │   ├── メタデータ定義
+   │   └── 構造化ドキュメント
+   │
+   ├── CSS3
+   │   ├── Grid レイアウト
+   │   ├── Flexbox レイアウト
+   │   ├── レスポンシブデザイン
+   │   ├── アニメーション効果
+   │   └── カスタムプロパティ（CSS変数）
+   │
+   ├── JavaScript ES6+
+   │   ├── クラスベース設計
+   │   │   └── PersonDetectionApp クラス
+   │   ├── モジュールシステム
+   │   ├── 非同期処理（async/await）
+   │   ├── イベント管理
+   │   └── DOM操作
+   │
+   └── Font Awesome 6.5.1
+       ├── アイコンシステム
+       └── プロフェッショナルUI要素
+
+2. AI/ML処理層 (AI Processing Layer)
+   ├── MediaPipe Pose
+   │   ├── 人物検出エンジン
+   │   ├── 骨格追跡システム
+   │   ├── キーポイント検出（33点）
+   │   ├── 信頼度計算
+   │   └── リアルタイム処理
+   │
+   └── TensorFlow.js
+       ├── 機械学習エンジン
+       ├── WebGL バックエンド
+       ├── GPU アクセラレーション
+       └── モデル実行環境
+
+3. Web API層 (Web API Layer)
+   ├── MediaDevices API
+   │   ├── getUserMedia()
+   │   ├── カメラアクセス制御
+   │   ├── ストリーム管理
+   │   └── デバイス列挙
+   │
+   ├── Canvas API
+   │   ├── 2Dコンテキスト描画
+   │   ├── 画像レンダリング
+   │   ├── toBlob() キャプチャ
+   │   └── drawImage() 処理
+   │
+   ├── Blob API
+   │   ├── バイナリデータ管理
+   │   ├── メモリ効率的な処理
+   │   ├── URL.createObjectURL()
+   │   └── URL.revokeObjectURL()
+   │
+   └── File System API
+       ├── ローカルファイル保存
+       ├── ダウンロード処理
+       └── ファイル管理
+
+4. ハードウェア層 (Hardware Layer)
+   ├── Webカメラ
+   │   ├── 映像入力デバイス
+   │   ├── 720p以上の解像度
+   │   └── 30fps キャプチャ
+   │
+   ├── CPU/GPU
+   │   ├── 中央演算処理装置
+   │   ├── グラフィック処理装置
+   │   ├── WebGL アクセラレーション
+   │   └── 並列処理能力
+   │
+   └── ローカルストレージ
+       ├── ブラウザメモリ
+       ├── 一時ファイル保存
+       └── キャッシュ管理
+
+5. データフロー
+   ├── 入力フェーズ
+   │   ├── カメラからの映像取得
+   │   └── ユーザーインタラクション
+   │
+   ├── 処理フェーズ
+   │   ├── フレーム抽出
+   │   ├── AI解析実行
+   │   ├── 骨格検出処理
+   │   └── 信頼度評価
+   │
+   ├── 出力フェーズ
+   │   ├── 骨格描画
+   │   ├── UI更新
+   │   └── 画像キャプチャ
+   │
+   └── 保存フェーズ
+       ├── Blob生成
+       ├── ギャラリー追加
+       └── ローカルダウンロード
+
+6. パフォーマンス最適化
+   ├── requestAnimationFrame
+   │   └── 効率的な描画ループ
+   ├── Blob URL管理
+   │   └── メモリリーク防止
+   ├── Canvas最適化
+   │   └── 描画操作の最小化
+   └── AI処理効率化
+       └── 検出間隔調整</pre>
+            </div>
         </div>
 
         <!-- 要件定義書 -->
@@ -1118,6 +1295,153 @@
                     <li>• REST API提供</li>
                 </ul>
             </div>
+
+            <h3><i class="fas fa-file-alt"></i> 要件定義階層構造（テキスト形式）</h3>
+            <div class="copy-area">
+                <button class="copy-btn" onclick="copyToClipboard('requirements-hierarchy')">
+                    <i class="fas fa-copy"></i> コピー
+                </button>
+                <pre id="requirements-hierarchy">人物検出カメラアプリケーション - 要件定義階層構造
+===========================================
+
+1. プロジェクト基本情報
+   ├── プロジェクト名: 人物検出カメラアプリケーション
+   ├── バージョン: 1.0.0
+   ├── 開発期間: 2025年10月
+   ├── 対象ユーザー
+   │   ├── 一般ユーザー
+   │   ├── 開発者
+   │   └── システム管理者
+   └── プラットフォーム: Webブラウザ（HTTPS環境）
+
+2. 機能要件 (Functional Requirements)
+   ├── 【必須要件】
+   │   ├── FR-001: カメラアクセス
+   │   │   ├── Webカメラからのリアルタイム映像取得
+   │   │   ├── デバイス選択機能
+   │   │   └── アクセス許可管理
+   │   │
+   │   ├── FR-002: 人物検出
+   │   │   ├── MediaPipe Poseによるリアルタイム検出
+   │   │   ├── 信頼度ベースのフィルタリング
+   │   │   └── 複数人物の同時検出（3-5人）
+   │   │
+   │   ├── FR-003: 骨格表示
+   │   │   ├── 33キーポイントの表示
+   │   │   ├── リアルタイム更新
+   │   │   └── 色分け表示
+   │   │
+   │   └── FR-004: 自動キャプチャ
+   │       ├── 人物検出時の自動保存
+   │       ├── 間隔設定（1-10秒）
+   │       └── 信頼度闾値による制御
+   │
+   └── 【重要要件】
+       ├── FR-005: 手動キャプチャ
+       │   ├── ボタンクリック操作
+       │   ├── キーボードショートカット（S）
+       │   └── 即時実行
+       │
+       ├── FR-006: 設定管理
+       │   ├── 検出信頼度（0.1-0.9）
+       │   ├── キャプチャ間隔（1-10秒）
+       │   └── 自動キャプチャON/OFF
+       │
+       ├── FR-007: 画像管理
+       │   ├── 個別削除機能
+       │   ├── 一括選択・削除
+       │   ├── 連続ダウンロード
+       │   └── 最大20枚制限
+       │
+       ├── FR-008: キーボード操作
+       │   ├── docs: ドキュメント表示
+       │   ├── C: カメラ開始/停止
+       │   ├── Space: 検出開始/停止
+       │   ├── S: 手動キャプチャ
+       │   └── ?: ヘルプ表示
+       │
+       ├── FR-009: レスポンシブUI
+       │   ├── デスクトップ対応
+       │   ├── タブレット対応
+       │   └── モバイル対応
+       │
+       └── FR-010: ドキュメント
+           ├── 操作説明書
+           ├── システム構成図
+           ├── 要件定義書
+           └── トラブルシューティング
+
+3. 非機能要件 (Non-Functional Requirements)
+   ├── パフォーマンス要件
+   │   ├── フレームレート: 30 FPS
+   │   ├── 検出レイテンシ: 100ms以下
+   │   ├── 検出精度: 90%以上
+   │   └── メモリ使用量: 500MB以下
+   │
+   ├── セキュリティ要件
+   │   ├── HTTPS通信必須
+   │   ├── ローカル処理（外部送信なし）
+   │   ├── 明示的カメラ許可
+   │   └── データ保護
+   │
+   ├── ユーザビリティ要件
+   │   ├── 直感的操作（5分以内の習得）
+   │   ├── アクセシビリティ対応
+   │   ├── 多言語対応（日本語UI）
+   │   └── エラー処理とガイダンス
+   │
+   └── 互換性要件
+       ├── Chrome 90+
+       ├── Edge 90+
+       ├── Firefox 88+
+       └── Safari 14+
+
+4. 制約条件
+   ├── 技術的制約
+   │   ├── MediaPipe対応ブラウザ必須
+   │   ├── HTTPS環境必須
+   │   ├── 同時検出数上限（3-5人）
+   │   └── メモリ制限（画像20枚）
+   │
+   ├── ハードウェア要件
+   │   ├── CPU: デュアルコア 2.0GHz以上
+   │   ├── RAM: 4GB以上
+   │   └── カメラ: 720p以上
+   │
+   └── ネットワーク要件
+       └── HTTPS接続必須
+
+5. 拡張計画（Phase 2）
+   ├── AI機能拡張
+   │   ├── 顔認識機能
+   │   ├── 複数人物追跡
+   │   └── 動作認識
+   │
+   ├── ストレージ拡張
+   │   ├── クラウド保存
+   │   ├── データベース連携
+   │   └── バックアップ機能
+   │
+   ├── 分析機能
+   │   ├── 統計ダッシュボード
+   │   ├── レポート生成
+   │   └── トレンド分析
+   │
+   └── API提供
+       ├── REST API
+       ├── WebSocket対応
+       └── SDK開発
+
+6. テスト要件
+   ├── 単体テスト
+   │   └── 各機能の個別動作確認
+   ├── 統合テスト
+   │   └── 全体フローの動作確認
+   ├── パフォーマンステスト
+   │   └── 負荷・速度測定
+   └── ユーザビリティテスト
+       └── 操作性・使いやすさ評価</pre>
+            </div>
         </div>
 
         <!-- トラブルシューティング -->
@@ -1292,6 +1616,71 @@
     </div>
 
     <script>
+        // コピー機能
+        function copyToClipboard(elementId) {
+            const textElement = document.getElementById(elementId);
+            const textContent = textElement.textContent || textElement.innerText;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textContent).then(() => {
+                    const btn = event.target.closest('.copy-btn');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> コピー済み';
+                    btn.classList.add('copied');
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('コピーに失敗しました:', err);
+                    fallbackCopyTextToClipboard(textContent);
+                });
+            } else {
+                fallbackCopyTextToClipboard(textContent);
+            }
+        }
+
+        // フォールバック用コピー関数
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.top = "0";
+            textArea.style.left = "0";
+            textArea.style.width = "2em";
+            textArea.style.height = "2em";
+            textArea.style.padding = "0";
+            textArea.style.border = "none";
+            textArea.style.outline = "none";
+            textArea.style.boxShadow = "none";
+            textArea.style.background = "transparent";
+
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const btn = event.target.closest('.copy-btn');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> コピー済み';
+                    btn.classList.add('copied');
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }
+            } catch (err) {
+                console.error('コピーに失敗しました:', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        // タブ機能
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
