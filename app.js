@@ -246,13 +246,22 @@ class PersonDetectionApp {
             return 0; // 主要ポイントが不足している場合は無効
         }
 
-        // 人体構造の妥当性をチェック
+        // 人体構造の妥当性をチェック - 顔のみ検出時は緩和
         const structureValid = this.validatePoseStructure(landmarks);
         console.log(`[DEBUG] 構造妥当性: ${structureValid}`);
 
-        if (!structureValid) {
+        // 顔のみ検出の可能性を判定（胴体が小さい場合）
+        const torsoLength = Math.abs((landmarks[11].y + landmarks[12].y) / 2 - (landmarks[23].y + landmarks[24].y) / 2);
+        const isFaceOnlyDetection = torsoLength < 0.08; // 8%未満は顔のみ検出の可能性
+
+        console.log(`[DEBUG] 胴体長: ${torsoLength.toFixed(3)}, 顔のみ検出判定: ${isFaceOnlyDetection}`);
+
+        if (!structureValid && !isFaceOnlyDetection) {
             console.log('[DEBUG] 構造妥当性チェック失敗でキャプチャ拒否');
             return 0; // 人体として不自然な形状の場合は無効
+        } else if (!structureValid && isFaceOnlyDetection) {
+            console.log('[DEBUG] 顔のみ検出のため構造チェックを緩和');
+            // 顔のみ検出の場合は構造チェックを通す
         }
 
         // 可視性の平均を計算
@@ -291,24 +300,24 @@ class PersonDetectionApp {
                 return false;
             }
 
-            // 胴体の長さをチェック（肩から腰まで）- 条件を緩和
+            // 胴体の長さをチェック（肩から腰まで）- 顔のみ・部分検出に対応
             const torsoLength = Math.abs((leftShoulder.y + rightShoulder.y) / 2 - (leftHip.y + rightHip.y) / 2);
-            if (torsoLength < 0.05 || torsoLength > 0.7) { // 画面高の5%〜70%に緩和
+            if (torsoLength < 0.02 || torsoLength > 0.8) { // 画面高の2%〜80%に大幅緩和（顔のみでも対応）
                 console.log(`[DEBUG] 胴体長チェック失敗: ${torsoLength.toFixed(3)}`);
                 return false;
             }
 
-            // 頭の位置チェック（肩より上にあるか）- 少し緩和
+            // 頭の位置チェック（肩より上にあるか）- 大幅緩和
             const shoulderY = (leftShoulder.y + rightShoulder.y) / 2;
-            if (nose.y > shoulderY + 0.05) { // 5%のマージンを追加
+            if (nose.y > shoulderY + 0.15) { // 15%の大きなマージンを追加（顔のみでも対応）
                 console.log(`[DEBUG] 頭部位置チェック失敗: nose=${nose.y.toFixed(3)}, shoulder=${shoulderY.toFixed(3)}`);
                 return false;
             }
 
-            // 対称性チェック（左右の肩と腰の高さがある程度揃っているか）- 条件を緩和
+            // 対称性チェック（左右の肩と腰の高さがある程度揃っているか）- さらに緩和
             const shoulderSymmetry = Math.abs(leftShoulder.y - rightShoulder.y);
             const hipSymmetry = Math.abs(leftHip.y - rightHip.y);
-            if (shoulderSymmetry > 0.15 || hipSymmetry > 0.15) { // 15%以上のずれは不自然に緩和
+            if (shoulderSymmetry > 0.25 || hipSymmetry > 0.25) { // 25%以上のずれは不自然に大幅緩和
                 console.log(`[DEBUG] 対称性チェック失敗: 肩=${shoulderSymmetry.toFixed(3)}, 腰=${hipSymmetry.toFixed(3)}`);
                 return false;
             }
