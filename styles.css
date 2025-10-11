@@ -164,6 +164,23 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.setting-item .mode-description {
+    width: 100%;
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.setting-item select {
+    width: 220px;
+    padding: 5px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: white;
 }
 
 .setting-item label {
